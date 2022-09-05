@@ -1,0 +1,13 @@
+<a
+  [routerLink]="[recipe.id]"
+  routerLinkActive="bg-blue-200"
+  class="flex items-center card p-5"
+>
+  <div class="flex-1">
+    <h4 class="font-bold text-xl">{{ recipe.name }}</h4>
+    <p>{{ recipe.description }}</p>
+  </div>
+  <div>
+    <img class="image" [src]="recipe.imagePath" [alt]="recipe.imagePath" />
+  </div>
+</a>

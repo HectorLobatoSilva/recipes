@@ -1,0 +1,10 @@
+<div class="flex flex-col gap-5">
+  <app-shopping-edit></app-shopping-edit>
+  <hr class="border border-black" />
+  <div class="overflow-auto max-h-[65vh]">
+    <app-shopping-list
+      [ingredients]="ingredients"
+      [service]="shoppingListService"
+    ></app-shopping-list>
+  </div>
+</div>

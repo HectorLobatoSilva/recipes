@@ -1,0 +1,20 @@
+<div class="w-full flex flex-col gap-6 max-h-[85.7vh]">
+  <div class="flex gap-5 itemx-center">
+    <img class="image" [src]="recipe.imagePath" [alt]="recipe.imagePath" />
+    <div>
+      <h3 class="font-bold text-xl">{{ recipe.name }}</h3>
+      <p>{{ recipe.description }}</p>
+    </div>
+  </div>
+  <app-dropdown
+    title="Manage Recipe"
+    class="w-fit"
+    [isButton]="true"
+    [options]="dropdownOptions"
+  ></app-dropdown>
+  <div class="card-container">
+    <div class="card p-2" *ngFor="let ingredient of recipe.ingredients">
+      {{ ingredient.name }} - ( {{ ingredient.amount }} )
+    </div>
+  </div>
+</div>

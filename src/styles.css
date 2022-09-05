@@ -1,1 +1,46 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .button {
+    @apply p-2 text-white border cursor-pointer rounded-lg;
+  }
+
+  .info {
+    @apply bg-blue-500 border-blue-900 hover:shadow-lg;
+  }
+
+  .green {
+    @apply bg-green-500 border-green-900 hover:shadow-lg;
+  }
+
+  .red {
+    @apply flex items-center justify-center text-center bg-red-500 border-red-900 rounded-md hover:bg-red-400;
+  }
+
+  .input-label {
+    @apply font-bold text-xl pr-1;
+  }
+
+  .input {
+    @apply p-2 border border-black rounded-md;
+  }
+
+  .card-container {
+    @apply w-full flex flex-col overflow-auto border border-black rounded-lg;
+  }
+
+  .card {
+    @apply flex items-center justify-between border-b border-black hover:bg-gray-200;
+  }
+
+  .image {
+    @apply rounded-full h-14 w-14;
+  }
+
+  .dropdown-item {
+    @apply block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer;
+  }
+}

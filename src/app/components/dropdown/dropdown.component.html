@@ -1,0 +1,29 @@
+<div class="relative" appDropdown>
+  <button class="flex items-center" [ngClass]="{ 'button info': isButton }">
+    {{ title }}
+    <svg
+      class="ml-2 w-4 h-4"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M19 9l-7 7-7-7"
+      ></path>
+    </svg>
+  </button>
+  <div
+    class="scale-0 ease-linear duration-100 absolute z-10 w-44 rounded-lg bg-gray-700"
+  >
+    <ul class="py-1 text-sm text-gray-200">
+      <li *ngFor="let option of options">
+        <a (click)="option.action()" class="dropdown-item">{{ option.name }}</a>
+      </li>
+    </ul>
+  </div>
+</div>
