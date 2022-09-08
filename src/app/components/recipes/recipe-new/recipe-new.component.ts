@@ -10,7 +10,7 @@ import { RecipeService } from 'src/app/services/recipe.service';
   templateUrl: './recipe-new.component.html',
 })
 export class RecipeNewComponent implements OnInit {
-  @ViewChild('form', { static: true }) form: NgForm;
+  @ViewChild('form', { static: false }) form: NgForm;
   submitText: string = 'Add';
   isEditForm: boolean = false;
   ingredients: Array<Ingredient> = [];
@@ -26,11 +26,9 @@ export class RecipeNewComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.recipe = this.recipeService.getById(Number(params['id']));
       if (this.recipe) {
-        const { name, description, imagePath, ingredients } = this.recipe;
-        const recipeForm = { name, description, imagePath };
-        this.ingredients = ingredients;
+        this.ingredients = this.recipe.ingredients;
         setTimeout(() => {
-          this.form?.setValue(recipeForm);
+          this.form.form.patchValue(this.recipe, { onlySelf: true });
           this.submitText = 'Update';
           this.isEditForm = true;
         });
@@ -50,15 +48,14 @@ export class RecipeNewComponent implements OnInit {
     name.focus();
   }
 
-  onSubmit(form: NgForm) {
-    console.log(typeof form.value);
+  onSubmit() {
     if (this.isEditForm) {
-      this.updateRecipe(form.value);
+      this.updateRecipe(this.form.value);
     } else {
-      this.addRecipe(form.value);
+      this.addRecipe(this.form.value);
     }
     this.ingredients = [];
-    form.reset();
+    this.form.reset();
   }
 
   onDeleteIngrient(id: number) {
@@ -79,9 +76,7 @@ export class RecipeNewComponent implements OnInit {
 
   updateRecipe(form: any) {
     const { name, description, imagePath } = form;
-    this.recipe.name = name;
-    this.recipe.description = description;
-    this.recipe.imagePath = imagePath;
+    this.recipe = { ...this.recipe, name, description, imagePath };
     this.recipeService.updateRecipe(this.recipe);
     this.router.navigate(['../'], { relativeTo: this.route });
   }

@@ -1,22 +1,55 @@
 <form
   class="flex flex-col gap-3 max-h-[85.7vh] overflow-visible"
   #form="ngForm"
-  (ngSubmit)="onSubmit(form)"
+  (ngSubmit)="onSubmit()"
 >
-  <h1 class="text-3xl font-bold">{{ submitText }} Recipe</h1>
+  <h1 class="text-2xl font-bold">{{ submitText }} Recipe</h1>
   <div class="grid">
-    <label class="font-bold">Name</label>
-    <input ngModel type="text" class="input" name="name" />
+    <label class="font-bold">Name <span class="text-red-600">*</span></label>
+    <input
+      ngModel
+      type="text"
+      class="input"
+      name="name"
+      required
+      #name="ngModel"
+    />
+    <span *ngIf="!name.valid && name.touched" class="text-red-600 text-sm"
+      >Name is required</span
+    >
+  </div>
+  <div class="grid">
+    <label class="font-bold"
+      >Image URL <span class="text-red-600">*</span></label
+    >
+    <div class="flex gap-5 items-center">
+      <input
+        ngModel
+        type="text"
+        class="input flex-1 max-h-11"
+        name="imagePath"
+        #imagePath="ngModel"
+        pattern="(https:)([/|.|\w|\s|-])*\.(?:jpg|gif|png)"
+        required
+      />
+      <img
+        *ngIf="imagePath.valid"
+        class="image"
+        [src]="imagePath.value"
+        [alt]="imagePath.value"
+      />
+    </div>
+    <span
+      *ngIf="!imagePath.valid && imagePath.touched"
+      class="text-red-600 text-sm"
+      >Please enter a valid image path</span
+    >
   </div>
   <div class="grid">
     <label class="font-bold">Description</label>
     <textarea ngModel type="text" class="input" name="description"></textarea>
   </div>
-  <div class="grid">
-    <label class="font-bold">Image URL</label>
-    <input ngModel type="text" class="input" name="imagePath" />
-  </div>
-  <h3 class="font-bold text-3xl">Ingredients</h3>
+  <h3 class="font-bold text-2xl">Ingredients</h3>
   <hr class="border border-black" />
   <div class="flex gap-2 items-end">
     <div>
@@ -41,5 +74,10 @@
       [service]="onDeleteIngrient"
     ></app-shopping-list>
   </div>
-  <button class="button info">{{ submitText }}</button>
+  <button
+    class="button info disabled:bg-blue-200 disabled:border-none disabled:shadow-none disabled:cursor-not-allowed"
+    [disabled]="!form.valid"
+  >
+    {{ submitText | uppercase }}
+  </button>
 </form>

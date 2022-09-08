@@ -8,7 +8,7 @@ import { RecipesListComponent } from './components/recipes/recipes-list/recipes-
 import { RecipeItemComponent } from './components/recipes/recipes-list/recipe-item/recipe-item.component';
 import { ShoppingListComponent } from './components/shopping/shopping-list/shopping-list.component';
 import { ShoppingEditComponent } from './components/shopping/shopping-edit/shopping-edit.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { RecipeDetailComponent } from './components/recipes/recipe-detail/recipe-detail.component';
@@ -16,6 +16,7 @@ import { DropdownDirective } from './directives/dropdown-menu.directive';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { RecipeNewComponent } from './components/recipes/recipe-new/recipe-new.component';
 import { ShoppingComponent } from './components/shopping/shopping.component';
+import { AmountPipe } from './amount.pipe';
 
 @NgModule({
   declarations: [
@@ -32,8 +33,10 @@ import { ShoppingComponent } from './components/shopping/shopping.component';
     DropdownComponent,
     RecipeNewComponent,
     ShoppingComponent,
+
+    AmountPipe,
   ],
-  imports: [BrowserModule, FormsModule, AppRoutingModule],
+  imports: [BrowserModule, FormsModule, AppRoutingModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

@@ -44,3 +44,8 @@
     @apply block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer;
   }
 }
+
+input.ng-invalid.ng-touched {
+  border-color: rgb(185 28 28);
+  border-width: 2px;
+}

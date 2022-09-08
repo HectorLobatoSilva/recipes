@@ -2,7 +2,7 @@
   <div class="flex gap-5 itemx-center">
     <img class="image" [src]="recipe.imagePath" [alt]="recipe.imagePath" />
     <div>
-      <h3 class="font-bold text-xl">{{ recipe.name }}</h3>
+      <h3 class="font-bold text-xl">{{ recipe.name | uppercase }}</h3>
       <p>{{ recipe.description }}</p>
     </div>
   </div>
@@ -14,7 +14,7 @@
   ></app-dropdown>
   <div class="card-container">
     <div class="card p-2" *ngFor="let ingredient of recipe.ingredients">
-      {{ ingredient.name }} - ( {{ ingredient.amount }} )
+      {{ ingredient.name }} - ( {{ ingredient.amount | amount }} )
     </div>
   </div>
 </div>

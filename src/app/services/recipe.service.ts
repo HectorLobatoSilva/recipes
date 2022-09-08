@@ -66,6 +66,7 @@ export class RecipeService {
   updateRecipe(recipe: Recipe) {
     const index = this.findByID(recipe.id);
     this.recipes[index] = recipe;
+    this.recipesChanged.next([...this.recipes]);
   }
 
   deleteRecipe(id: number) {
