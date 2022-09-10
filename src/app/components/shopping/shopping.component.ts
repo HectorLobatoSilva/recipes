@@ -25,4 +25,8 @@ export class ShoppingComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
+  onDeleteIngredient(id: number) {
+    this.ingredients.splice(id, 1);
+  }
 }

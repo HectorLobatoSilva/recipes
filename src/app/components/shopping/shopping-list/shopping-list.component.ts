@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
@@ -8,16 +9,12 @@ import { ShoppingListService } from 'src/app/services/shopping-list.service';
 })
 export class ShoppingListComponent implements OnInit {
   @Input() ingredients: Array<Ingredient> = [];
-  @Input() service: ShoppingListService | any = null;
+  @Output() onDelete = new Subject<number>();
   constructor() {}
 
   ngOnInit(): void {}
 
   delete(id: number) {
-    if (typeof this.service !== 'function') {
-      this.service.onDeleteIngredientByID(id);
-    } else {
-      this.service(id);
-    }
+    this.onDelete.next(id);
   }
 }

@@ -71,7 +71,7 @@
   <div class="overflow-auto">
     <app-shopping-list
       [ingredients]="ingredients"
-      [service]="onDeleteIngrient"
+      (onDelete)="onDeleteIngrient($event)"
     ></app-shopping-list>
   </div>
   <button
