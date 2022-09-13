@@ -1,4 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Subject } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
@@ -18,6 +23,7 @@ export class RecipeService {
 
   recipesChanged = new Subject<Array<Recipe>>();
   recipeSelected = new Subject<Recipe>();
+  recipeError = new Subject<string>();
 
   recipes: Array<Recipe> = [
     // new Recipe(
@@ -39,6 +45,8 @@ export class RecipeService {
     //   [new Ingredient(1, 'Buns', 12)]
     // ),
   ];
+
+  headers = new HttpHeaders({});
 
   addNewRecipe(recipe: Recipe) {
     this.http
@@ -65,7 +73,10 @@ export class RecipeService {
 
   getRecipes() {
     this.http
-      .get<Array<Recipe>>(`${this.backendUrl}/recipes.json`)
+      .get<Array<Recipe>>(`${this.backendUrl}/recipes.json`, {
+        headers: this.headers,
+        params: new HttpParams().set('', ''),
+      })
       .pipe(
         map((data: Object) => {
           const recipesArray: Array<Recipe> = [];
@@ -79,9 +90,14 @@ export class RecipeService {
           return recipesArray;
         })
       )
-      .subscribe((recipes: Array<Recipe>) => {
-        this.recipes = recipes;
-        this.recipesChanged.next([...this.recipes]);
+      .subscribe({
+        next: (recipes: Array<Recipe>) => {
+          this.recipes = recipes;
+          this.recipesChanged.next([...this.recipes]);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.recipeError.next(`${error.error.error}`);
+        },
       });
   }
 

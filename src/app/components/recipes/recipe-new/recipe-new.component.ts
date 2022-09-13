@@ -27,15 +27,27 @@ export class RecipeNewComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
       if (this.id) {
-        const recipe = this.recipeService.getRecipeByID(this.id);
-        if (!recipe) this.router.navigate(['../'], { relativeTo: this.route });
-        this.ingredients = recipe.ingredients || [];
-        setTimeout(() => {
-          this.form.form.patchValue(recipe, { onlySelf: true });
-          this.submitText = 'Update';
-          this.isEditForm = true;
-        });
+        if (this.recipeService.getRecipeByID(this.id)) {
+          this.initValues(this.recipeService.getRecipeByID(this.id));
+        } else {
+          this.recipeService
+            .fetchByID(params['id'])
+            .subscribe((recipe: Recipe) => {
+              if (!recipe)
+                this.router.navigate(['../'], { relativeTo: this.route });
+              this.initValues(recipe);
+            });
+        }
       }
+    });
+  }
+
+  initValues(recipe: Recipe) {
+    this.ingredients = recipe.ingredients || [];
+    setTimeout(() => {
+      this.form.form.patchValue(recipe, { onlySelf: true });
+      this.submitText = 'Update';
+      this.isEditForm = true;
     });
   }
 

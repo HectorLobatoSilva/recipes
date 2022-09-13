@@ -52,18 +52,28 @@
   <h3 class="font-bold text-2xl">Ingredients</h3>
   <hr class="border border-black" />
   <div class="flex gap-2 items-end">
-    <div>
+    <div class="flex-1">
       <label class="grid font-bold">Name</label>
-      <input #ingredientName type="text" class="input" name="ingredient" />
+      <input
+        #ingredientName
+        type="text"
+        class="input w-full"
+        name="ingredient"
+      />
     </div>
-    <div>
+    <div class="flex-1">
       <label class="grid font-bold">Amount</label>
-      <input #ingredientAmount type="number" class="input" name="amount" />
+      <input
+        #ingredientAmount
+        type="number"
+        class="input w-full"
+        name="amount"
+      />
     </div>
     <button
       type="button"
       (click)="onAddIngredient(ingredientName, ingredientAmount)"
-      class="flex-1 button green"
+      class="w-24 button green"
     >
       +
     </button>

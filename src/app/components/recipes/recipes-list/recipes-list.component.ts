@@ -9,13 +9,18 @@ import { RecipeService } from 'src/app/services/recipe.service';
 })
 export class RecipesListComponent implements OnInit, OnDestroy {
   recipes: Array<Recipe> = [];
+  isLoading = true;
+
   private subscription: Subscription;
   constructor(private recipeService: RecipeService) {}
 
   ngOnInit(): void {
     this.recipeService.getRecipes();
     this.subscription = this.recipeService.recipesChanged.subscribe(
-      (recipes: Array<Recipe>) => (this.recipes = recipes)
+      (recipes: Array<Recipe>) => {
+        this.recipes = recipes;
+        this.isLoading = false;
+      }
     );
   }
 
