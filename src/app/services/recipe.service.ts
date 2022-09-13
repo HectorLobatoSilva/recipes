@@ -51,8 +51,13 @@ export class RecipeService {
   addNewRecipe(recipe: Recipe) {
     this.http
       .post(`${this.backendUrl}/recipes.json`, recipe)
+      .pipe(
+        map((response) => {
+          return Object.assign(response)['name'];
+        })
+      )
       .subscribe((recipeId) => {
-        recipe['id'] = recipeId as string;
+        recipe['id'] = recipeId;
         this.recipes.push(recipe);
         this.recipesChanged.next([...this.recipes]);
       });
@@ -73,10 +78,7 @@ export class RecipeService {
 
   getRecipes() {
     this.http
-      .get<Array<Recipe>>(`${this.backendUrl}/recipes.json`, {
-        headers: this.headers,
-        params: new HttpParams().set('', ''),
-      })
+      .get<Array<Recipe>>(`${this.backendUrl}/recipes.json`)
       .pipe(
         map((data: Object) => {
           const recipesArray: Array<Recipe> = [];

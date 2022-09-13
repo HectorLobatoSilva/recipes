@@ -18,7 +18,9 @@ import { RecipeNewComponent } from './components/recipes/recipe-new/recipe-new.c
 import { ShoppingComponent } from './components/shopping/shopping.component';
 import { AmountPipe } from './amount.pipe';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterseptorService } from './services/auth-interseptor.service';
+import { LogginInterseptorService } from './services/loggin-interseptor.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,18 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterseptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LogginInterseptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
