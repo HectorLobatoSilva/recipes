@@ -6,7 +6,7 @@ import { Recipe } from 'src/app/models/recipe.model';
   templateUrl: './recipe-item.component.html',
 })
 export class RecipeItemComponent implements OnInit {
-  @Input() recipe: Recipe = new Recipe(1, '', '', '', []);
+  @Input() recipe: Recipe;
   constructor() {}
 
   ngOnInit(): void {}

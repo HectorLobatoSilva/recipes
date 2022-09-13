@@ -14,7 +14,8 @@ export class RecipeNewComponent implements OnInit {
   submitText: string = 'Add';
   isEditForm: boolean = false;
   ingredients: Array<Ingredient> = [];
-  recipe: Recipe;
+
+  id: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -24,11 +25,13 @@ export class RecipeNewComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.recipe = this.recipeService.getById(Number(params['id']));
-      if (this.recipe) {
-        this.ingredients = this.recipe.ingredients;
+      this.id = params['id'];
+      if (this.id) {
+        const recipe = this.recipeService.getRecipeByID(this.id);
+        if (!recipe) this.router.navigate(['../'], { relativeTo: this.route });
+        this.ingredients = recipe.ingredients || [];
         setTimeout(() => {
-          this.form.form.patchValue(this.recipe, { onlySelf: true });
+          this.form.form.patchValue(recipe, { onlySelf: true });
           this.submitText = 'Update';
           this.isEditForm = true;
         });
@@ -38,10 +41,7 @@ export class RecipeNewComponent implements OnInit {
 
   onAddIngredient(name: HTMLInputElement, amount: HTMLInputElement) {
     if (name.value && amount.value) {
-      const id = this.ingredients.length + 1;
-      this.ingredients.push(
-        new Ingredient(id, name.value, Number(amount.value))
-      );
+      this.ingredients.push(new Ingredient(name.value, Number(amount.value)));
       name.value = '';
       amount.value = '0';
     }
@@ -49,35 +49,25 @@ export class RecipeNewComponent implements OnInit {
   }
 
   onSubmit() {
+    const { name, description, imagePath } = this.form.value;
+    const recipe = new Recipe(
+      name,
+      description,
+      imagePath,
+      this.ingredients,
+      this.id
+    );
     if (this.isEditForm) {
-      this.updateRecipe(this.form.value);
+      this.recipeService.updateRecipe(recipe);
     } else {
-      this.addRecipe(this.form.value);
+      this.recipeService.addNewRecipe(recipe);
     }
     this.ingredients = [];
     this.form.reset();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onDeleteIngrient(id: number) {
     this.ingredients.splice(id, 1);
-  }
-
-  addRecipe(form: any) {
-    const { name, description, imagePath } = form;
-    const recipe: Recipe = new Recipe(
-      this.recipeService.generateID(),
-      name,
-      description,
-      imagePath,
-      this.ingredients
-    );
-    this.recipeService.addNewRecipe(recipe);
-  }
-
-  updateRecipe(form: any) {
-    const { name, description, imagePath } = form;
-    this.recipe = { ...this.recipe, name, description, imagePath };
-    this.recipeService.updateRecipe(this.recipe);
-    this.router.navigate(['../'], { relativeTo: this.route });
   }
 }

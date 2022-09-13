@@ -18,6 +18,8 @@ import { RecipeNewComponent } from './components/recipes/recipe-new/recipe-new.c
 import { ShoppingComponent } from './components/shopping/shopping.component';
 import { AmountPipe } from './amount.pipe';
 
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +38,13 @@ import { AmountPipe } from './amount.pipe';
 
     AmountPipe,
   ],
-  imports: [BrowserModule, FormsModule, AppRoutingModule, ReactiveFormsModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

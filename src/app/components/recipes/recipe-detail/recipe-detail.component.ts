@@ -9,8 +9,7 @@ import { RecipeService } from 'src/app/services/recipe.service';
   templateUrl: './recipe-detail.component.html',
 })
 export class RecipeDetailComponent implements OnInit {
-  recipe: Recipe;
-  id: number = 0;
+  recipe: Recipe = new Recipe('', '', '', []);
   dropdownOptions: Array<DropdownOption> = [
     new DropdownOption('Send to shopping list', () =>
       this.onSendToShoppingList()
@@ -18,6 +17,9 @@ export class RecipeDetailComponent implements OnInit {
     new DropdownOption('Edit Recipe', () => this.onEditRecipe()),
     new DropdownOption('Delete Recipe', () => this.onDeleteRecipe()),
   ];
+
+  id: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -26,11 +28,18 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.recipe = this.recipeService.getById(Number(params['id']));
-      if (!this.recipe) {
-        this.router.navigate(['./../'], { relativeTo: this.route });
+      this.id = params['id'];
+      if (this.recipeService.getRecipeByID(this.id)) {
+        this.recipe = this.recipeService.getRecipeByID(this.id);
+      } else {
+        this.recipeService
+          .fetchByID(params['id'])
+          .subscribe((recipe: Recipe) => {
+            if (!recipe)
+              this.router.navigate(['../'], { relativeTo: this.route });
+            this.recipe = recipe;
+          });
       }
-      this.id = Number(params['id']);
     });
   }
 
