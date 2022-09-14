@@ -13,28 +13,33 @@ export class RecipeService {
   recipeSelected = new Subject<Recipe>();
 
   recipes: Array<Recipe> = [
-    new Recipe(
-      1,
-      'A test recipe1',
-      'Simple test',
-      'https://i.gifer.com/WUis.gif',
-      [new Ingredient(1, 'Meat', 1)]
-    ),
-    new Recipe(
-      2,
-      'A test recipe2',
-      'Simple test',
-      'https://cdn.pixabay.com/photo/2014/04/22/02/56/pizza-329523_960_720.jpg',
-      [new Ingredient(1, 'Tomato', 5), new Ingredient(2, 'Apple', 15)]
-    ),
-    new Recipe(
-      3,
-      'A test recipe3',
-      'Simple test',
-      'https://cdn.pixabay.com/photo/2014/10/19/20/59/hamburger-494706_960_720.jpg',
-      [new Ingredient(1, 'Buns', 12)]
-    ),
+    // new Recipe(
+    //   1,
+    //   'A test recipe1',
+    //   'Simple test',
+    //   'https://i.gifer.com/WUis.gif',
+    //   [new Ingredient(1, 'Meat', 1)]
+    // ),
+    // new Recipe(
+    //   2,
+    //   'A test recipe2',
+    //   'Simple test',
+    //   'https://cdn.pixabay.com/photo/2014/04/22/02/56/pizza-329523_960_720.jpg',
+    //   [new Ingredient(1, 'Tomato', 5), new Ingredient(2, 'Apple', 15)]
+    // ),
+    // new Recipe(
+    //   3,
+    //   'A test recipe3',
+    //   'Simple test',
+    //   'https://cdn.pixabay.com/photo/2014/10/19/20/59/hamburger-494706_960_720.jpg',
+    //   [new Ingredient(1, 'Buns', 12)]
+    // ),
   ];
+
+  setRecipes(recipes: Array<Recipe>) {
+    this.recipes = recipes;
+    this.recipesChanged.next([...this.recipes]);
+  }
 
   getRecipes() {
     return [...this.recipes];

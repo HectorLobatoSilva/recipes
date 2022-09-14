@@ -17,6 +17,7 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { RecipeNewComponent } from './components/recipes/recipe-new/recipe-new.component';
 import { ShoppingComponent } from './components/shopping/shopping.component';
 import { AmountPipe } from './amount.pipe';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,13 @@ import { AmountPipe } from './amount.pipe';
 
     AmountPipe,
   ],
-  imports: [BrowserModule, FormsModule, AppRoutingModule, ReactiveFormsModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

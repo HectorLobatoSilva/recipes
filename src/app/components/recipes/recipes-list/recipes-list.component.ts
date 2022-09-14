@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Recipe } from 'src/app/models/recipe.model';
+import { DataStorageService } from 'src/app/services/data-storage.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 
 @Component({
@@ -10,10 +11,13 @@ import { RecipeService } from 'src/app/services/recipe.service';
 export class RecipesListComponent implements OnInit, OnDestroy {
   recipes: Array<Recipe> = [];
   private subscription: Subscription;
-  constructor(private recipeService: RecipeService) {}
+  constructor(
+    private recipeService: RecipeService,
+    private dataStorage: DataStorageService
+  ) {}
 
   ngOnInit(): void {
-    this.recipes = this.recipeService.getRecipes();
+    this.dataStorage.fetchRecipes().subscribe();
     this.subscription = this.recipeService.recipesChanged.subscribe(
       (recipes: Array<Recipe>) => (this.recipes = recipes)
     );
