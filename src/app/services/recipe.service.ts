@@ -5,7 +5,7 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Subject } from 'rxjs';
+import { map, Subject, tap } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 import { Recipe } from '../models/recipe.model';
 import { ShoppingListService } from './shopping-list.service';
@@ -72,12 +72,16 @@ export class RecipeService {
     return this.recipes[index];
   }
 
-  fetchByID(id: string) {
-    return this.http.get<Recipe>(`${this.backendUrl}/recipes/${id}.json`);
+  getRecipes() {
+    return [...this.recipes];
   }
 
-  getRecipes() {
-    this.http
+  // fetchByID(id: string) {
+  //   return this.http.get<Recipe>(`${this.backendUrl}/recipes/${id}.json`);
+  // }
+
+  fetchRecipes() {
+    return this.http
       .get<Array<Recipe>>(`${this.backendUrl}/recipes.json`)
       .pipe(
         map((data: Object) => {
@@ -92,15 +96,12 @@ export class RecipeService {
           return recipesArray;
         })
       )
-      .subscribe({
-        next: (recipes: Array<Recipe>) => {
+      .pipe(
+        tap((recipes: Array<Recipe>) => {
           this.recipes = recipes;
           this.recipesChanged.next([...this.recipes]);
-        },
-        error: (error: HttpErrorResponse) => {
-          this.recipeError.next(`${error.error.error}`);
-        },
-      });
+        })
+      );
   }
 
   updateRecipe(body: Recipe) {

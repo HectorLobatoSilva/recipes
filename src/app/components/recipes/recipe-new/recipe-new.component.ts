@@ -25,19 +25,9 @@ export class RecipeNewComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      if (this.id) {
-        if (this.recipeService.getRecipeByID(this.id)) {
-          this.initValues(this.recipeService.getRecipeByID(this.id));
-        } else {
-          this.recipeService
-            .fetchByID(params['id'])
-            .subscribe((recipe: Recipe) => {
-              if (!recipe)
-                this.router.navigate(['../'], { relativeTo: this.route });
-              this.initValues(recipe);
-            });
-        }
+      if (params['id']) {
+        this.id = params['id'];
+        this.initValues(this.recipeService.getRecipeByID(this.id));
       }
     });
   }

@@ -6,7 +6,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Ingredient } from 'src/app/models/ingredient.model';
 import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
 @Component({
@@ -31,28 +30,9 @@ export class ShoppingEditComponent implements OnInit {
         ]),
       }),
     });
-
-    // this.shoppingForm.valueChanges.subscribe((value) => console.log(value));
-    // this.shoppingForm.statusChanges.subscribe((status) => console.log(status));
-
-    // this.shoppingForm.setValue({
-    //   ingredients: {
-    //     name: '',
-    //     amount: 40,
-    //   },
-    // });
-
-    // this.shoppingForm.patchValue({
-    //   ingredients: {
-    //     amount: 150,
-    //   },
-    // });
   }
 
   onSubmit() {
-    // console.log(this.shoppingForm.get('ingredients.name')?.valid);
-    // this.shoppingListService.addIngredient(this.form.value as Ingredient);
-    // form.reset();
     this.shoppingListService.addIngredient(
       this.shoppingForm.get('ingredients')?.value
     );
