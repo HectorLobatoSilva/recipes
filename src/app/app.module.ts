@@ -21,6 +21,10 @@ import { AmountPipe } from './amount.pipe';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterseptorService } from './services/auth-interseptor.service';
 import { LogginInterseptorService } from './services/loggin-interseptor.service';
+import { AuthComponent } from './auth/auth.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { environment } from 'src/environments/environment';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -39,25 +43,28 @@ import { LogginInterseptorService } from './services/loggin-interseptor.service'
     ShoppingComponent,
 
     AmountPipe,
+    AuthComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule,
+    // HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterseptorService,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LogginInterseptorService,
-      multi: true,
-    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthInterseptorService,
+    //   multi: true,
+    // },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: LogginInterseptorService,
+    //   multi: true,
+    // },
   ],
   bootstrap: [AppComponent],
 })

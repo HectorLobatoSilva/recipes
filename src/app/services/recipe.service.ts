@@ -1,24 +1,18 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpParams,
-} from '@angular/common/http';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Injectable } from '@angular/core';
 import { map, Subject, tap } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 import { Recipe } from '../models/recipe.model';
 import { ShoppingListService } from './shopping-list.service';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
   currentRecipeID: number = 4;
 
-  backendUrl = 'https://recipes-9ccf1-default-rtdb.firebaseio.com';
-
   constructor(
     private shoppingListService: ShoppingListService,
-    private http: HttpClient
+    private db: AngularFireDatabase
   ) {}
 
   recipesChanged = new Subject<Array<Recipe>>();
@@ -26,38 +20,18 @@ export class RecipeService {
   recipeError = new Subject<string>();
 
   recipes: Array<Recipe> = [
-    // new Recipe(
-    //   'A test recipe1',
-    //   'Simple test',
     //   'https://i.gifer.com/WUis.gif',
-    //   [new Ingredient(1, 'Meat', 1)]
-    // ),
-    // new Recipe(
-    //   'A test recipe2',
-    //   'Simple test',
     //   'https://cdn.pixabay.com/photo/2014/04/22/02/56/pizza-329523_960_720.jpg',
-    //   [new Ingredient(1, 'Tomato', 5), new Ingredient(2, 'Apple', 15)]
-    // ),
-    // new Recipe(
-    //   'A test recipe3',
-    //   'Simple test',
     //   'https://cdn.pixabay.com/photo/2014/10/19/20/59/hamburger-494706_960_720.jpg',
-    //   [new Ingredient(1, 'Buns', 12)]
-    // ),
   ];
 
-  headers = new HttpHeaders({});
-
   addNewRecipe(recipe: Recipe) {
-    this.http
-      .post(`${this.backendUrl}/recipes.json`, recipe)
-      .pipe(
-        map((response) => {
-          return Object.assign(response)['name'];
-        })
-      )
-      .subscribe((recipeId) => {
-        recipe['id'] = recipeId;
+    const id = uuid();
+    delete recipe.id;
+    this.makeRef(id)
+      .update(recipe)
+      .then(() => {
+        recipe.id = id;
         this.recipes.push(recipe);
         this.recipesChanged.next([...this.recipes]);
       });
@@ -76,16 +50,19 @@ export class RecipeService {
     return [...this.recipes];
   }
 
-  // fetchByID(id: string) {
-  //   return this.http.get<Recipe>(`${this.backendUrl}/recipes/${id}.json`);
-  // }
+  makeRef(id?: string) {
+    return this.db.object(
+      `users/${sessionStorage.getItem('token')}/${id ? id : ''}`
+    );
+  }
 
   fetchRecipes() {
-    return this.http
-      .get<Array<Recipe>>(`${this.backendUrl}/recipes.json`)
+    return this.makeRef()
+      .valueChanges()
       .pipe(
-        map((data: Object) => {
+        map((items: unknown) => {
           const recipesArray: Array<Recipe> = [];
+          const data = items as Object;
           for (const key in data) {
             if (data.hasOwnProperty(key)) {
               const recipe = Object.assign(data[key as keyof Object]) as Recipe;
@@ -105,19 +82,21 @@ export class RecipeService {
   }
 
   updateRecipe(body: Recipe) {
-    this.http
-      .put<Recipe>(`${this.backendUrl}/recipes/${body.id}.json`, body)
-      .subscribe(() => {
-        const index = this.findIndex(body.id!);
+    const { id } = body;
+    delete body.id;
+    this.makeRef(id)
+      .update(body)
+      .then(() => {
+        const index = this.findIndex(id!);
         this.recipes[index] = body;
         this.recipesChanged.next([...this.recipes]);
       });
   }
 
   deleteRecipe(id: string) {
-    return this.http
-      .delete(`${this.backendUrl}/recipes/${id}.json`)
-      .subscribe(() => {
+    this.makeRef(id)
+      .remove()
+      .then(() => {
         const index = this.findIndex(id);
         this.recipes.splice(index, 1);
         this.recipesChanged.next([...this.recipes]);
@@ -126,5 +105,9 @@ export class RecipeService {
 
   findIndex(id: string) {
     return this.recipes.findIndex((recipe: Recipe) => recipe.id === id);
+  }
+
+  clearRecipes() {
+    this.recipes = [];
   }
 }
