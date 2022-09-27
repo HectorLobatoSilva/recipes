@@ -59,11 +59,15 @@ export class AuthService {
   }
 
   setError(errorCode: string) {
+    console.warn({ errorCode });
+
     switch (errorCode) {
       case 'auth/email-already-in-use':
         throw new Error('Email already exists');
       case 'auth/user-not-found':
-        throw new Error('User does not exists');
+        throw new Error('Email or password is wrong');
+      case 'auth/wrong-password' || 'auth/user-not-found':
+        throw new Error('Email or password is wrong');
     }
   }
 }

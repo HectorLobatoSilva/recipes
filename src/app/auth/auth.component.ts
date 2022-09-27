@@ -41,5 +41,9 @@ export class AuthComponent implements OnInit {
     }
   }
 
+  clearError() {
+    this.error = '';
+  }
+
   ngOnInit(): void {}
 }

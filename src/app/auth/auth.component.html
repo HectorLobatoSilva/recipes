@@ -4,9 +4,14 @@
   <div class="w-1/2">
     <div
       *ngIf="error"
-      class="p-3 text-center text-red-800 bg-red-200 rounded-lg w-full"
+      class="p-3 text-red-800 bg-red-200 rounded-lg w-full flex items-center justify-between"
     >
-      {{ error }}
+      <span class="text-center">
+        {{ error }}
+      </span>
+      <button class="text-red-900 rounded-full px-2" (click)="clearError()">
+        x
+      </button>
     </div>
     <form class="flex flex-col gap-2" #form="ngForm" (ngSubmit)="onSubmit()">
       <div class="grid">
