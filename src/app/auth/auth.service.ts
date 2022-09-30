@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Subject } from 'rxjs';
-import { RecipeService } from './recipe.service';
+import { RecipeService } from '../services/recipe.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
