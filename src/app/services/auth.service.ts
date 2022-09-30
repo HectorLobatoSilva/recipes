@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Subject } from 'rxjs';
 import { RecipeService } from './recipe.service';
-import { throwError } from 'rxjs';
-import { FirebaseError } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -59,8 +57,6 @@ export class AuthService {
   }
 
   setError(errorCode: string) {
-    console.warn({ errorCode });
-
     switch (errorCode) {
       case 'auth/email-already-in-use':
         throw new Error('Email already exists');

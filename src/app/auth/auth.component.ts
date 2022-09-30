@@ -32,8 +32,6 @@ export class AuthComponent implements OnInit {
       }
       this.form.reset();
     } catch (error: any) {
-      console.warn({ error });
-
       this.error = error.message;
     } finally {
       this.isLoading = false;
