@@ -19,11 +19,7 @@ export class RecipeService {
   recipeSelected = new Subject<Recipe>();
   recipeError = new Subject<string>();
 
-  recipes: Array<Recipe> = [
-    //   'https://i.gifer.com/WUis.gif',
-    //   'https://cdn.pixabay.com/photo/2014/04/22/02/56/pizza-329523_960_720.jpg',
-    //   'https://cdn.pixabay.com/photo/2014/10/19/20/59/hamburger-494706_960_720.jpg',
-  ];
+  recipes: Array<Recipe> = [];
 
   addNewRecipe(recipe: Recipe) {
     const id = uuid();
@@ -88,7 +84,7 @@ export class RecipeService {
       .update(body)
       .then(() => {
         const index = this.findIndex(id!);
-        this.recipes[index] = body;
+        this.recipes[index] = { ...body, id };
         this.recipesChanged.next([...this.recipes]);
       });
   }

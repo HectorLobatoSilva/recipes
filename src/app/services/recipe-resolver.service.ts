@@ -12,10 +12,7 @@ import { RecipeService } from './recipe.service';
 export class RecipeResolverService implements Resolve<Array<Recipe>> {
   constructor(private recipeService: RecipeService) {}
 
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
+  resolve(): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
     const recipes = this.recipeService.getRecipes();
     if (recipes.length === 0) {
       return this.recipeService.fetchRecipes();

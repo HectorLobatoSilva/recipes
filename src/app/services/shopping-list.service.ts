@@ -1,17 +1,10 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingListService {
-  private ingredients: Array<Ingredient> = [
-    // new Ingredient(1, 'potato', 12),
-    // new Ingredient(2, 'potato', 12),
-    // new Ingredient(3, 'potato', 12),
-    // new Ingredient(4, 'potato', 12),
-    // new Ingredient(5, 'potato', 12),
-    // new Ingredient(6, 'potato', 12),
-  ];
+  private ingredients: Array<Ingredient> = [];
 
   ingredientsChanged = new Subject<Array<Ingredient>>();
   clearShoppingList = new Subject<void>();
