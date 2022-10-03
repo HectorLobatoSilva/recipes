@@ -3,12 +3,21 @@
     <div class="flex gap-5 text-white">
       <a routerLink="/recipes" class="font-bold text-3xl">Recipe book</a>
       <a
+        *ngIf="isAuth"
         class="p-2 rounded-lg"
         routerLinkActive="bg-gray-900"
         routerLink="/recipes"
         >Recipe</a
       >
       <a
+        *ngIf="!isAuth"
+        class="p-2 rounded-lg"
+        routerLinkActive="bg-gray-900"
+        routerLink="/auth"
+        >Authenticate</a
+      >
+      <a
+        *ngIf="isAuth"
         class="p-2 rounded-lg"
         routerLinkActive="bg-gray-900"
         routerLink="/shopping-list"
@@ -16,7 +25,7 @@
       >
     </div>
     <div class="flex items-center text-white">
-      <app-dropdown title="Manage"></app-dropdown>
+      <app-dropdown title="Manage" [options]="dropdownOptions"></app-dropdown>
     </div>
   </div>
 </nav>

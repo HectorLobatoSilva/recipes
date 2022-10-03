@@ -11,7 +11,6 @@ export class LogginInterseptorService implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log('ADD to interseptor');
     return next.handle(req);
   }
 }
