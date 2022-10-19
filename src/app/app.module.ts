@@ -10,6 +10,9 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { SharedModule } from './modules/shared.module';
 import { HeaderComponent } from './components/header/header.component';
+import { StoreModule } from '@ngrx/store';
+import { shoppingListReducer } from './reducers/shopping-list.reducer';
+import { recipesReducer } from './reducers/recipes.reducer';
 
 @NgModule({
   declarations: [HeaderComponent, AppComponent, ErrorPageComponent],
@@ -18,6 +21,13 @@ import { HeaderComponent } from './components/header/header.component';
     AppRoutingModule,
     SharedModule,
     AngularFireModule.initializeApp(environment.firebase),
+    StoreModule.forRoot(
+      {
+        shoppingList: shoppingListReducer,
+        recipes: recipesReducer,
+      },
+      {}
+    ),
   ],
   providers: [],
   bootstrap: [AppComponent],

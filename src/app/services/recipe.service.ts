@@ -3,16 +3,17 @@ import { Injectable } from '@angular/core';
 import { map, Subject, tap } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 import { Recipe } from '../models/recipe.model';
-import { ShoppingListService } from './shopping-list.service';
 import { v4 as uuid } from 'uuid';
+import { Store } from '@ngrx/store';
+import { AddManyIngredientsAction } from '../actions/shopping-list.actions';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
   currentRecipeID: number = 4;
 
   constructor(
-    private shoppingListService: ShoppingListService,
-    private db: AngularFireDatabase
+    private db: AngularFireDatabase,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
   ) {}
 
   recipesChanged = new Subject<Array<Recipe>>();
@@ -21,20 +22,12 @@ export class RecipeService {
 
   recipes: Array<Recipe> = [];
 
-  addNewRecipe(recipe: Recipe) {
-    const id = uuid();
-    delete recipe.id;
-    this.makeRef(id)
-      .update(recipe)
-      .then(() => {
-        recipe.id = id;
-        this.recipes.push(recipe);
-        this.recipesChanged.next([...this.recipes]);
-      });
-  }
-
   addIngredientsToShoopingList(ingredients: Array<Ingredient>) {
-    this.shoppingListService.addRecipeIngredients(ingredients);
+    this.store.dispatch(
+      AddManyIngredientsAction({
+        payload: ingredients,
+      })
+    );
   }
 
   getRecipeByID(id: string) {
@@ -50,6 +43,14 @@ export class RecipeService {
     return this.db.object(
       `users/${sessionStorage.getItem('token')}/${id ? id : ''}`
     );
+  }
+
+  findIndex(id: string) {
+    return this.recipes.findIndex((recipe: Recipe) => recipe.id === id);
+  }
+
+  clearRecipes() {
+    this.recipes = [];
   }
 
   fetchRecipes() {
@@ -77,6 +78,18 @@ export class RecipeService {
       );
   }
 
+  addNewRecipe(recipe: Recipe) {
+    const id = uuid();
+    delete recipe.id;
+    this.makeRef(id)
+      .update(recipe)
+      .then(() => {
+        recipe.id = id;
+        this.recipes.push(recipe);
+        this.recipesChanged.next([...this.recipes]);
+      });
+  }
+
   updateRecipe(body: Recipe) {
     const { id } = body;
     delete body.id;
@@ -97,13 +110,5 @@ export class RecipeService {
         this.recipes.splice(index, 1);
         this.recipesChanged.next([...this.recipes]);
       });
-  }
-
-  findIndex(id: string) {
-    return this.recipes.findIndex((recipe: Recipe) => recipe.id === id);
-  }
-
-  clearRecipes() {
-    this.recipes = [];
   }
 }

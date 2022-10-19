@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { Ingredient } from 'src/app/models/ingredient.model';
 
 @Component({
@@ -7,7 +7,7 @@ import { Ingredient } from 'src/app/models/ingredient.model';
   templateUrl: './shopping-list.component.html',
 })
 export class ShoppingListComponent implements OnInit {
-  @Input() ingredients: Array<Ingredient> = [];
+  @Input() ingredients: Observable<{ ingredients: Ingredient[] }>;
   @Output() onDelete = new Subject<number>();
   constructor() {}
 

@@ -1,5 +1,8 @@
 <div class="card-container">
-  <div *ngFor="let ingredient of ingredients; let i = index" class="card p-4">
+  <div
+    *ngFor="let ingredient of (ingredients | async)?.ingredients; let i = index"
+    class="card p-4"
+  >
     <a>{{ ingredient.name }} - ( {{ ingredient.amount | amount: "PZA":1 }} )</a>
     <button type="button" class="button red" (click)="delete(i)">
       <svg

@@ -1,32 +1,26 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
+import { DeleteIngredientAction } from 'src/app/actions/shopping-list.actions';
 import { Ingredient } from 'src/app/models/ingredient.model';
-import { ShoppingListService } from 'src/app/services/shopping-list.service';
 
 @Component({
   selector: 'app-shopping',
   templateUrl: './shopping.component.html',
 })
 export class ShoppingComponent implements OnInit, OnDestroy {
-  ingredients: Array<Ingredient> = [];
-  private subscription: Subscription;
-  constructor(protected shoppingListService: ShoppingListService) {}
+  ingredients: Observable<{ ingredients: Ingredient[] }>;
+  constructor(
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+  ) {}
 
   ngOnInit(): void {
-    this.ingredients = this.shoppingListService.getIngredients();
-    this.subscription = this.shoppingListService.ingredientsChanged.subscribe(
-      (ingredients: Array<Ingredient>) => (this.ingredients = [...ingredients])
-    );
-    this.shoppingListService.clearShoppingList.subscribe(
-      () => (this.ingredients = [])
-    );
+    this.ingredients = this.store.select('shoppingList');
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 
   onDeleteIngredient(id: number) {
-    this.ingredients.splice(id, 1);
+    this.store.dispatch(DeleteIngredientAction({ paylod: id }));
   }
 }

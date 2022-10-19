@@ -5,8 +5,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { ShoppingListService } from 'src/app/services/shopping-list.service';
+import {
+  AddIngredientAction,
+  ClearIngredientsAction,
+} from 'src/app/actions/shopping-list.actions';
+import { Ingredient } from 'src/app/models/ingredient.model';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -14,7 +19,9 @@ import { ShoppingListService } from 'src/app/services/shopping-list.service';
 })
 export class ShoppingEditComponent implements OnInit {
   shoppingForm: FormGroup;
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+  ) {}
 
   ngOnInit(): void {
     this.shoppingForm = new FormGroup({
@@ -33,8 +40,10 @@ export class ShoppingEditComponent implements OnInit {
   }
 
   onSubmit() {
-    this.shoppingListService.addIngredient(
-      this.shoppingForm.get('ingredients')?.value
+    this.store.dispatch(
+      AddIngredientAction({
+        payload: this.shoppingForm.get('ingredients')?.value,
+      })
     );
     this.shoppingForm.reset({
       ingredients: {
@@ -44,7 +53,7 @@ export class ShoppingEditComponent implements OnInit {
   }
 
   onClearShoopingList() {
-    this.shoppingListService.clearShoppinList();
+    this.store.dispatch(ClearIngredientsAction());
   }
 
   forbiddenAmount(control: FormControl): { [s: string]: boolean } | null {
