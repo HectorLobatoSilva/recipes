@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
+import { StoreActionsType } from 'src/app/reducers/actions-type';
 import { RecipeService } from 'src/app/services/recipe.service';
 
 @Component({
@@ -20,14 +22,23 @@ export class RecipeNewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private store: Store<StoreActionsType['recipe']>
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       if (params['id']) {
         this.id = params['id'];
-        this.initValues(this.recipeService.getRecipeByID(this.id));
+        this.store
+          .select('recipes')
+          .subscribe(({ recipes }: StoreActionsType['recipe']['recipes']) => {
+            const index = recipes.findIndex(
+              (recipe: Recipe) => recipe.id === this.id
+            );
+            const recipe = [...recipes][index];
+            this.initValues(recipe);
+          });
       }
     });
   }

@@ -12,6 +12,7 @@ import {
   ClearIngredientsAction,
 } from 'src/app/actions/shopping-list.actions';
 import { Ingredient } from 'src/app/models/ingredient.model';
+import { StoreActionsType } from 'src/app/reducers/actions-type';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -19,9 +20,7 @@ import { Ingredient } from 'src/app/models/ingredient.model';
 })
 export class ShoppingEditComponent implements OnInit {
   shoppingForm: FormGroup;
-  constructor(
-    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
-  ) {}
+  constructor(private store: Store<StoreActionsType['shopping']>) {}
 
   ngOnInit(): void {
     this.shoppingForm = new FormGroup({

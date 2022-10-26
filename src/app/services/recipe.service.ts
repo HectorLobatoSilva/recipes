@@ -6,6 +6,13 @@ import { Recipe } from '../models/recipe.model';
 import { v4 as uuid } from 'uuid';
 import { Store } from '@ngrx/store';
 import { AddManyIngredientsAction } from '../actions/shopping-list.actions';
+import { StoreActionsType } from '../reducers/actions-type';
+import {
+  AddManyRecipesAction,
+  AddRecipeAction,
+  DeleteRecipeAction,
+  UpdateRecipeAction,
+} from '../actions/recipes.actions';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
@@ -13,14 +20,17 @@ export class RecipeService {
 
   constructor(
     private db: AngularFireDatabase,
-    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+    private store: Store<{
+      shoppingList: StoreActionsType['shopping']['shoppingList'];
+      recipe: StoreActionsType['recipe']['recipes'];
+    }>
   ) {}
 
-  recipesChanged = new Subject<Array<Recipe>>();
-  recipeSelected = new Subject<Recipe>();
-  recipeError = new Subject<string>();
+  // recipesChanged = new Subject<Array<Recipe>>();
+  // recipeSelected = new Subject<Recipe>();
+  // recipeError = new Subject<string>();
 
-  recipes: Array<Recipe> = [];
+  // recipes: Array<Recipe> = [];
 
   addIngredientsToShoopingList(ingredients: Array<Ingredient>) {
     this.store.dispatch(
@@ -32,11 +42,11 @@ export class RecipeService {
 
   getRecipeByID(id: string) {
     const index = this.findIndex(id);
-    return this.recipes[index];
+    // return this.recipes[index];
   }
 
   getRecipes() {
-    return [...this.recipes];
+    // return [...this.recipes];
   }
 
   makeRef(id?: string) {
@@ -46,11 +56,11 @@ export class RecipeService {
   }
 
   findIndex(id: string) {
-    return this.recipes.findIndex((recipe: Recipe) => recipe.id === id);
+    // return this.recipes.findIndex((recipe: Recipe) => recipe.id === id);
   }
 
   clearRecipes() {
-    this.recipes = [];
+    // this.recipes = [];
   }
 
   fetchRecipes() {
@@ -72,33 +82,29 @@ export class RecipeService {
       )
       .pipe(
         tap((recipes: Array<Recipe>) => {
-          this.recipes = recipes;
-          this.recipesChanged.next([...this.recipes]);
+          this.store.dispatch(AddManyRecipesAction({ payload: recipes }));
         })
       );
   }
 
   addNewRecipe(recipe: Recipe) {
     const id = uuid();
-    delete recipe.id;
+    recipe.id = id;
     this.makeRef(id)
       .update(recipe)
       .then(() => {
-        recipe.id = id;
-        this.recipes.push(recipe);
-        this.recipesChanged.next([...this.recipes]);
+        this.store.dispatch(AddRecipeAction({ payload: recipe }));
       });
   }
 
   updateRecipe(body: Recipe) {
     const { id } = body;
-    delete body.id;
     this.makeRef(id)
       .update(body)
       .then(() => {
-        const index = this.findIndex(id!);
-        this.recipes[index] = { ...body, id };
-        this.recipesChanged.next([...this.recipes]);
+        this.store.dispatch(
+          UpdateRecipeAction({ payload: { uid: id!, recipe: body } })
+        );
       });
   }
 
@@ -106,9 +112,7 @@ export class RecipeService {
     this.makeRef(id)
       .remove()
       .then(() => {
-        const index = this.findIndex(id);
-        this.recipes.splice(index, 1);
-        this.recipesChanged.next([...this.recipes]);
+        this.store.dispatch(DeleteRecipeAction({ payload: { uid: id } }));
       });
   }
 }

@@ -11,9 +11,10 @@ export class RecipesComponent implements OnInit {
   constructor(private recipeService: RecipeService, private router: Router) {}
 
   ngOnInit(): void {
-    this.recipeService.recipeError.subscribe((error: string) => {
-      this.error = error;
-    });
+    console.warn('TODO RecipesComponent [ERROR Handling]');
+    // this.recipeService.recipeError.subscribe((error: string) => {
+    //   this.error = error;
+    // });
   }
 
   OnRemoveError() {

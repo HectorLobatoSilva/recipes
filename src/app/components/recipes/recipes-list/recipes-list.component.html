@@ -1,12 +1,12 @@
 <div
   class="card-container h-[80vh]"
   [ngClass]="{
-    'items-center justify-center': recipes.length === 0
+    'items-center justify-center': (recipes | async)?.recipes?.length === 0
   }"
 >
   <app-recipe-item
-    *ngFor="let recipe of recipes"
+    *ngFor="let recipe of (recipes | async)?.recipes"
     [recipe]="recipe"
   ></app-recipe-item>
-  <app-loader *ngIf="recipes.length === 0"></app-loader>
+  <app-loader *ngIf="(recipes | async)?.recipes?.length === 0"></app-loader>
 </div>
