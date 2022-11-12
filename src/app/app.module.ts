@@ -17,7 +17,7 @@ import { recipesReducer } from './reducers/recipes.reducer';
 @NgModule({
   declarations: [HeaderComponent, AppComponent, ErrorPageComponent],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     SharedModule,
     AngularFireModule.initializeApp(environment.firebase),
