@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Subject } from 'rxjs';
+import { SessionStorageService } from '../services/localstorage.service';
 import { RecipeService } from '../services/recipe.service';
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +11,8 @@ export class AuthService {
 
   constructor(
     private fireAuth: AngularFireAuth,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private sessionStorage: SessionStorageService
   ) {}
 
   async signUp(email: string, password: string) {
@@ -20,7 +22,7 @@ export class AuthService {
         password
       );
       const token = await response.user!.uid;
-      sessionStorage.setItem('token', token!.toString());
+      this.sessionStorage.setItem('token', token!.toString());
       this.onAuthChange.next(true);
     } catch (error: any) {
       this.setError(error.code);
@@ -34,7 +36,7 @@ export class AuthService {
         password
       );
       const token = await response.user!.uid;
-      sessionStorage.setItem('token', token!.toString());
+      this.sessionStorage.setItem('token', token!.toString());
       this.onAuthChange.next(true);
     } catch (error: any) {
       this.setError(error.code);
@@ -44,7 +46,7 @@ export class AuthService {
   async logOut() {
     try {
       await this.fireAuth.signOut();
-      sessionStorage.removeItem('token');
+      this.sessionStorage.removeItem('token');
       this.recipeService.clearRecipes();
       this.onAuthChange.next(false);
     } catch (error: any) {

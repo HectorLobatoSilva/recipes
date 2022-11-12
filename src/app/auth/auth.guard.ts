@@ -7,12 +7,16 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { SessionStorageService } from '../services/localstorage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private sessionStorage: SessionStorageService
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -22,7 +26,7 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (!!sessionStorage.getItem('token')) return true;
+    if (Boolean(this.sessionStorage.getItem('token'))) return true;
     console.warn('Access denied!');
     this.router.navigate(['/auth']);
     return false;

@@ -13,6 +13,7 @@ import {
   DeleteRecipeAction,
   UpdateRecipeAction,
 } from '../actions/recipes.actions';
+import { SessionStorageService } from './localstorage.service';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
@@ -23,7 +24,8 @@ export class RecipeService {
     private store: Store<{
       shoppingList: StoreActionsType['shopping']['shoppingList'];
       recipe: StoreActionsType['recipe']['recipes'];
-    }>
+    }>,
+    private sessionStorage: SessionStorageService
   ) {}
 
   // recipesChanged = new Subject<Array<Recipe>>();
@@ -51,7 +53,7 @@ export class RecipeService {
 
   makeRef(id?: string) {
     return this.db.object(
-      `users/${sessionStorage.getItem('token')}/${id ? id : ''}`
+      `users/${this.sessionStorage.getItem('token')}/${id ? id : ''}`
     );
   }
 
