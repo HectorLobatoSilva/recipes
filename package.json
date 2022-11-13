@@ -5,12 +5,13 @@
     "ng": "ng",
     "config": "node ./setenv.js",
     "start": "yarn run config -- --environment=dev && ng serve",
-    "build": "yarn run config -- --environment=prod && ng build",
+    "build-dev": "yarn run config -- --environment=prod && ng build",
     "test": "ng test",
     "dev:ssr": "ng run recipes:serve-ssr",
     "serve:ssr": "node dist/recipes/server/main.js",
-    "build:ssr": "ng build && ng run recipes:server",
-    "prerender": "ng run recipes:prerender"
+    "build:ssr": "yarn run config -- --environment=prod && ng build && ng run recipes:server",
+    "prerender": "ng run recipes:prerender",
+    "vercel-build": "yarn build:ssr"
   },
   "private": true,
   "dependencies": {
